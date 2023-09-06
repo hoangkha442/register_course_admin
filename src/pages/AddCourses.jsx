@@ -49,7 +49,6 @@ export default function AddCourses() {
         // tao doi tuong de? doc file
         let reader = new FileReader();
         reader.readAsDataURL(file);
-        console.log('file: ', file);
         setPicture(file.name);
     }
     const onFinish = (values) => {

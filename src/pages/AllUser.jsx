@@ -90,7 +90,6 @@ const AllUser = () => {
   // Set value search form
   const handleOnchange = (event) => {
     let { value } = event.target;
-    console.log("event.target: ", event.target.value);
     setUserName(value);
   };
   return (

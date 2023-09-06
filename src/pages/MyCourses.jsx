@@ -18,7 +18,6 @@ export default function MyCourses() {
   // MODAL ANTD
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [course, setCourse] = useState();
-  console.log("course: ", course);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -31,7 +30,6 @@ export default function MyCourses() {
   const admin = useSelector((state) => {
     return state.adminSlice.adminInfo;
   });
-  console.log("admin: ", admin);
   const navigate = useNavigate();
   //  !admin navigate => login
   useEffect(() => {
@@ -44,7 +42,6 @@ export default function MyCourses() {
     // tao doi tuong de? doc file
     let reader = new FileReader();
     reader.readAsDataURL(file);
-    console.log("file: ", file);
     setPicture(file.name);
   };
   // Call API Courses List
@@ -59,7 +56,6 @@ export default function MyCourses() {
   }, []);
   // DELETE COURSE
   const handleDeleteCourse = (item) => {
-    console.log("item.maKhoaHoc: ", item.maKhoaHoc);
     CoursesService.deleteCourse(item.maKhoaHoc)
       .then((res) => {
         Swal.fire({
@@ -104,7 +100,6 @@ export default function MyCourses() {
       taiKhoanNguoiTao: admin?.taiKhoan,
       maKhoaHoc: course?.maKhoaHoc
     };
-    console.log("newValues: ", newValues);
     CoursesService.putCourse(newValues)
       .then((res) => {
         Swal.fire({
@@ -176,7 +171,7 @@ export default function MyCourses() {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Username
+                Courses Code
               </th>
               <th scope="col" className="px-6 py-3">
                 FullName
@@ -185,7 +180,7 @@ export default function MyCourses() {
                 Email
               </th>
               <th scope="col" className="px-6 py-3">
-                Phone Number
+                UserName
               </th>
               <th scope="col" className="px-6 py-3">
                 Action

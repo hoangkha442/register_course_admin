@@ -1,12 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
-import Analytics from "./pages/Analytics";
-
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import AllUser from "./pages/AllUser";
 import AllCourses from "./pages/AllCourses";
-import Courses from "./pages/Courses";
 import MyCourses from "./pages/MyCourses";
 import AddCourses from "./pages/AddCourses";
 
