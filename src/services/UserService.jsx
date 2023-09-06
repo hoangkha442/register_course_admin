@@ -19,6 +19,9 @@ export const UserService = {
   },
   deleteUser: (userName) => { 
     return https.delete(`/api/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${userName}`)
-   }
+  },
+  getAllUser: (group, username) => { 
+    return https.get(`https://elearningnew.cybersoft.edu.vn/api/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${group}&tuKhoa=${username}`)
+  }
 }
 

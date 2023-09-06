@@ -164,7 +164,7 @@ const Sidebar = () => {
             <button className="link text-red-500">
                 <LogoutOutlined className="min-w-max text-xl mr-1 " />
                 
-                {admin.hoTen}
+                {admin?.hoTen}
               </button>
             </li>
                 </ul>

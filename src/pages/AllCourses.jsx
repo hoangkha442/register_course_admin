@@ -81,7 +81,7 @@ const AllCourses = () => {
           >
             {item.maKhoaHoc}
           </th>
-          <td className="px-6 py-3">{item.tenKhoaHoc}</td>
+          <td className="px-6 py-3">{item.tenKhoaHoc.length > 30 ? item.tenKhoaHoc.slice(0, 25) + ' ...' : item.tenKhoaHoc}</td>
           <td className="px-6 py-3">
             {item.danhMucKhoaHoc?.tenDanhMucKhoaHoc}
           </td>
@@ -220,7 +220,7 @@ const AllCourses = () => {
                 {category} <span className="text-base font-[400]">courses</span>
               </h1>
               <h1>
-                <span className="text-base font-[400]">Group</span> {group}{" "}
+                <span className="text-base font-[400]">Group</span> {group}
               </h1>
             </div>
             <div className="w-[50%]">
@@ -290,7 +290,7 @@ const AllCourses = () => {
           <img className="object-cover h-full w-full" src={course?.hinhAnh} alt={course?.danhMucKhoaHoc?.tenDanhMucKhoaHoc} />
         </div>
         <div className="col-span-12 sm:col-span-8 p-2 sm:p-6">
-            <p className='line-clamp-2 font-semibold md:leading-relaxed md:text-xl text-[#666666]'>{course?.danhMucKhoaHoc.tenDanhMucKhoaHoc}</p>
+            <p className='line-clamp-2 font-semibold md:leading-relaxed md:text-xl text-[#666666]'>{course?.tenKhoaHoc}</p>
             <p className='mt-1 md:block hidden text-[#666666] font-[300]'>{course?.moTa.length > 80 ? course?.moTa.slice(0,70) + '...' : course?.moTa}</p>
             <p className='md:font-semibold font-light mt-1 text-[#666666]'>{course?.nguoiTao.hoTen}</p>
             <p className='sm:hidden line-clamp-2 font-semibold md:leading-relaxed md:text-xl text-[#666666] flex items-center'>5.0 </p>

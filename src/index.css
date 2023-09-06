@@ -28,3 +28,8 @@
 #pagination_courses .ant-pagination-options{
   display: none !important;
 }
+
+.ant-modal-footer{
+  display: none !important;
+
+}

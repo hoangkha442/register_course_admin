@@ -20,8 +20,8 @@ export let storeAdmin = configureStore({
 root.render(
   <BrowserRouter >
     <Provider store={storeAdmin}>
-    <App />
-  </Provider>
+      <App />
+    </Provider>
   </BrowserRouter>
 );
 
