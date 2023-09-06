@@ -12,16 +12,19 @@ export const UserService = {
   putUserInfor: (data) => {
     return https.put("/api/QuanLyNguoiDung/CapNhatThongTinNguoiDung", data);
   },
-  getUserListPagination: (currentPage, sizePage) => {
-    return https.get(
-      `/api/QuanLyNguoiDung/LayDanhSachNguoiDung_PhanTrang?MaNhom=GP10&page=${currentPage}&pageSize=${sizePage}`
-    );
+  getUserListPagination: (group, taikhoan ='',currentPage, sizePage) => {
+    if(taikhoan !==''){
+      return https.get(
+        `/api/QuanLyNguoiDung/LayDanhSachNguoiDung_PhanTrang?MaNhom=${group}&tuKhoa=${taikhoan}&page=${currentPage}&pageSize=${sizePage}`
+      )
+    }else{
+      return https.get(
+        `/api/QuanLyNguoiDung/LayDanhSachNguoiDung_PhanTrang?MaNhom=${group}&page=${currentPage}&pageSize=${sizePage}`
+      )
+    }
   },
   deleteUser: (userName) => { 
     return https.delete(`/api/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${userName}`)
-  },
-  getAllUser: (group, username) => { 
-    return https.get(`https://elearningnew.cybersoft.edu.vn/api/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${group}&tuKhoa=${username}`)
   }
 }
 

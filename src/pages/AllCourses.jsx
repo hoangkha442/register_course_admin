@@ -3,13 +3,9 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CoursesService } from "../services/CoursesService";
-import { animate } from "framer-motion";
 import { Modal, Pagination, Select, Space } from "antd";
 import { EyeOutlined, StarFilled } from "@ant-design/icons";
 const { Option } = Select;
-const handleChange = (value) => {
-  console.log(`selected ${value}`);
-};
 const AllCourses = () => {
   const admin = useSelector((state) => {
     return state.adminSlice.adminInfo;
@@ -17,7 +13,6 @@ const AllCourses = () => {
   // MODAL ANTD 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [course, setCourse] = useState()
-  console.log('course: ', course);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -41,7 +36,6 @@ const AllCourses = () => {
   };
   // Get Course when popup modal is opened
   const handleGetCourse = (course) => { 
-    console.log('course: ', course);
     setCourse(course)
    }
   //  !admin navigate => login
@@ -129,7 +123,6 @@ const AllCourses = () => {
     setGroup(value);
   };
   const handleOnChangeCategory = (value) => {
-    console.log("value: ", value);
     setCategory(value);
   };
 
