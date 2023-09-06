@@ -46,3 +46,14 @@
   font-size: 18px !important;
   color: #00000080 !important;
 }
+
+.form-btn .ant-form-item-row{
+  width: 100%!important;
+  display: inline-block !important;
+  text-align: end !important;
+}
+
+.form-btn .ant-form-item-row .ant-col{
+  display: inline-block !important;
+  width: 25% !important;
+}

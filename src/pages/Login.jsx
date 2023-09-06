@@ -19,6 +19,9 @@ export default function Login() {
   useEffect(() => { 
     if(admin){
       navigate('/')
+      setTimeout(() => {
+        window.location.reload()
+      }, 200);
     }
   }, [])
   console.log('admin: ', admin);

@@ -3,6 +3,9 @@ import { https } from "./Config";
 export const CoursesService = {
   getCoursesList: () => {
     return https.get(`/api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?MaNhom=GP05`);
+  },
+  getMyCoursesList: () => {
+    return https.get(`/api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?MaNhom=GP15`);
   }
   ,getCoursesListPopular: () => {
     return https.get(`/api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?MaNhom=GP01`);
@@ -26,14 +29,17 @@ export const CoursesService = {
   postRegisterCourses: (data) => {
     return https.post("/api/QuanLyKhoaHoc/DangKyKhoaHoc", data);
   },
-  postCancelCourses: (data) => {
-    return https.post("/api/QuanLyKhoaHoc/HuyGhiDanh", data);
-  },
   postCourses: (data) => {
     return https.post("/api/QuanLyKhoaHoc/ThemKhoaHoc", data);
   },
   postCoursesPicture: (data) => {
     return https.post('/api/QuanLyKhoaHoc/ThemKhoaHocUploadHinh', data);
-  }
+  },
+  deleteCourse: (data) => {
+    return https.delete(`/api/QuanLyKhoaHoc/XoaKhoaHoc?MaKhoaHoc=${data}`);
+  },
+  putCourse: (data) => {
+    return https.put(`/api/QuanLyKhoaHoc/CapNhatKhoaHoc`, data);
+  },
 }
 
