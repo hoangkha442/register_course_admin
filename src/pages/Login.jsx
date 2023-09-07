@@ -41,8 +41,9 @@ export default function Login() {
                 showConfirmButton: false,
                 timer: 1500,
         });
+        navigate('/')
         setTimeout(() => {
-          navigate('/')
+          window.location.reload();
         }, 1000);
       }
       else{

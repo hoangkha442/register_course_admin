@@ -41,5 +41,21 @@ export const CoursesService = {
   putCourse: (data) => {
     return https.put(`/api/QuanLyKhoaHoc/CapNhatKhoaHoc`, data);
   },
+  getListStudent: (courseCode) => { 
+    return https.post(`/api/QuanLyNguoiDung/LayDanhSachHocVienKhoaHoc`, courseCode);
+  },
+  getListAwaitingApproval: (courseCode) => { 
+    return https.post(`/api/QuanLyNguoiDung/LayDanhSachHocVienChoXetDuyet`, courseCode);
+  },
+  postAcceptRegisterCourse: (data) => { 
+    return https.post(`/api/QuanLyKhoaHoc/GhiDanhKhoaHoc`, data);
+  },
+  postCancelRegisterCourse: (data) => { 
+    return https.post(`/api/QuanLyKhoaHoc/HuyGhiDanh`, data);
+  },
+  postPictureCourses : (data) => { 
+    return https.post(`/api/QuanLyKhoaHoc/UploadHinhAnhKhoaHoc`, data)
+   }
+   
 }
 

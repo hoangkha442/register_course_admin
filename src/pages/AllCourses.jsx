@@ -155,6 +155,7 @@ const AllCourses = () => {
                   <Option value="GP06">GP06</Option>
                   <Option value="GP07">GP07</Option>
                   <Option value="GP08">GP08</Option>
+                  <Option value="GP08">GP15</Option>
                 </Select>
                 <Select
                   defaultValue="All"

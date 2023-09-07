@@ -14,6 +14,7 @@ const onFinishFailed = (errorInfo) => {
 export default function MyCourses() {
   const [courseList, setCourseList] = useState([]);
   const [picture, setPicture] = useState();
+  const [file, setFile] = useState();
   const regexNumber = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$/;
   // MODAL ANTD
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +44,7 @@ export default function MyCourses() {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     setPicture(file.name);
+    setFile(file);
   };
   // Call API Courses List
   useEffect(() => {
@@ -102,16 +104,25 @@ export default function MyCourses() {
     };
     CoursesService.putCourse(newValues)
       .then((res) => {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Add Course Successfully",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 600);
+        let frm = new FormData();
+        frm.append("file", file);
+        frm.append("tenKhoaHoc", newValues.tenKhoaHoc);
+        CoursesService.postPictureCourses(frm)
+          .then((res) => {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Add Course Successfully",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          })
+          .catch((err) => {
+            console.log("err: ", err);
+          });
       })
       .catch((err) => {
         Swal.fire({
@@ -134,12 +145,18 @@ export default function MyCourses() {
           >
             {item.maKhoaHoc}
           </th>
+          <td className="px-6 py-3">
+            <div className="w-20 h-12">
+            <img src={item.hinhAnh} className="object-cover h-full w-full" alt="" />
+
+            </div>
+          </td>
           <td className="px-6 py-3">{item.tenKhoaHoc}</td>
           <td className="px-6 py-3">
             {item.danhMucKhoaHoc?.tenDanhMucKhoaHoc}
           </td>
           <td className="px-6 py-3">{item.nguoiTao?.hoTen}</td>
-          <td className="px-6 py-3 flex items-center space-x-3">
+          <td className="px-6 py-3 flex items-center space-x-3 leading-10">
             <button
               onClick={() => {
                 handleDeleteCourse(item);
@@ -174,10 +191,13 @@ export default function MyCourses() {
                 Courses Code
               </th>
               <th scope="col" className="px-6 py-3">
-                FullName
+                Picture
               </th>
               <th scope="col" className="px-6 py-3">
-                Email
+                Course Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Category
               </th>
               <th scope="col" className="px-6 py-3">
                 UserName
@@ -191,9 +211,10 @@ export default function MyCourses() {
         </table>
       </div>
       <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <h1 className="text-3xl mt-4 font-semibold text-center text-black">
+        <h1 className="text-3xl mt-4 font-semibold text-center text-black mb-4">
           Edit Course
         </h1>
+        
         <Form
           className="mt-6"
           name="basic"

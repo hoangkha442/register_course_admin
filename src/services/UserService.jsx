@@ -25,6 +25,9 @@ export const UserService = {
   },
   deleteUser: (userName) => { 
     return https.delete(`/api/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${userName}`)
-  }
+  },
+  postAddUser: (data) => { 
+    return https.post(`/api/QuanLyNguoiDung/ThemNguoiDung` , data)
+   }
 }
 

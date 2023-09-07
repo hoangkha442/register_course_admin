@@ -6,6 +6,8 @@ import AllUser from "./pages/AllUser";
 import AllCourses from "./pages/AllCourses";
 import MyCourses from "./pages/MyCourses";
 import AddCourses from "./pages/AddCourses";
+import MyStudent from "./pages/MyStudent";
+import Approve from "./pages/Approve";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/my-courses" element={<MyCourses />} />
         <Route path="/add-courses" element={<AddCourses />} />
+        <Route path="/my-students" element={<MyStudent />} />
+        <Route path="/approve" element={<Approve />} />
       </Routes>
     </RootLayout>
   );
