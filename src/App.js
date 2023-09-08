@@ -8,9 +8,12 @@ import MyCourses from "./pages/MyCourses";
 import AddCourses from "./pages/AddCourses";
 import MyStudent from "./pages/MyStudent";
 import Approve from "./pages/Approve";
+import Spinner from "./components/Spinner/Spinner";
 
 function App() {
   return (
+    <div className="">
+      <Spinner />
     <RootLayout>
       <Routes>
         <Route path="/login" element={<Login />}/>
@@ -23,6 +26,7 @@ function App() {
         <Route path="/approve" element={<Approve />} />
       </Routes>
     </RootLayout>
+    </div>
   );
 }
 
