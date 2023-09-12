@@ -24,41 +24,45 @@ export default function Login() {
       }, 200);
     }
   }, [])
-  console.log('admin: ', admin);
   const onFinish = (values) => {
-    console.log('values: ', values);
     UserService.postLogin(values)
-    .then((res) => { 
-      console.log('res: ', res);
-      if(res.data.maLoaiNguoiDung === 'GV'){
-        dispatch(setlogin(res.data));
-        // lưu xuống localStorages => giữ trạng thái đăng nhập sau khi load trang
-        userLocalStorage.set(res.data);
-        Swal.fire({
+      .then((res) => {
+        if(res.data.maLoaiNguoiDung === 'GV'){
+              dispatch(setlogin(res.data));
+              // lưu xuống localStorages => giữ trạng thái đăng nhập sau khi load trang
+              userLocalStorage.set(res.data);
+              Swal.fire({
+                      position: "center",
+                      icon: "success",
+                      title: "Login Successfully!",
+                      showConfirmButton: false,
+                      timer: 1500,
+              });
+              navigate('/')
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            }
+            else{
+              Swal.fire({
                 position: "center",
-                icon: "success",
-                title: "Login Successfully!",
+                icon: "error",
+                title: "You do not have access!",
                 showConfirmButton: false,
                 timer: 1500,
-        });
-        navigate('/')
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
-      else{
+          });
+            }
+      })
+      .catch((err) => {
+        console.log('err: ', err);
         Swal.fire({
           position: "center",
           icon: "error",
-          title: "You do not have access!",
+          title: err.response.data,
           showConfirmButton: false,
           timer: 1500,
-  });
-      }
-    })
-    .cacth((err) => { 
-      console.log('err: ', err);
-    })
+        });
+      });
   };
   return (
     <div className="h-screen w-screen fixed top-0 left-0 flex justify-center items-start bg-white z-[999]">

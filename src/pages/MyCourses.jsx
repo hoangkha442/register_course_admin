@@ -56,6 +56,9 @@ export default function MyCourses() {
         console.log("err: ", err);
       });
   }, []);
+
+
+  // => .length > 0 ? render course list : 'Create Courses'
   // DELETE COURSE
   const handleDeleteCourse = (item) => {
     CoursesService.deleteCourse(item.maKhoaHoc)
@@ -136,7 +139,7 @@ export default function MyCourses() {
   };
   // RENDER course
   const renderMyCourses = () => {
-    return courseList.map((item, index) => {
+    return myListCourses.map((item, index) => {
       return (
         <tr key={item.maKhoaHoc} className="bg-white border-b">
           <th
@@ -177,13 +180,42 @@ export default function MyCourses() {
       );
     });
   };
-
+    // RENDER MY COURSES 
+    const myListCourses = courseList.filter((course) => { 
+      return course?.nguoiTao?.taiKhoan.toLowerCase().includes(admin.taiKhoan)
+    })
+    console.log('myListCourses: ', myListCourses);
   return (
     <div className="">
       <div className="my-6">
-        <h1>My Courses</h1>
+        <h1>{myListCourses?.length} Courses</h1>
       </div>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+      {myListCourses?.length  == 0 ? <>
+        <div className="container-90">
+                  <div className="shadow-md text-center bg-white">
+                    <div className="w-60 h-44 mx-auto text-center mb-9">
+                      <img
+                        className="h-full object-cover"
+                        src="/img/empty-shopping-cart-v2.jpg"
+                        alt="hinhAnh"
+                      />
+                    </div>
+                    <p className="mb-9">
+                      Your courses is empty. Add more Courses!
+                    </p>
+                    <button
+                      onClick={() => {
+                        setTimeout(() => {
+                          navigate("/add-courses");
+                        }, 300);
+                      }}
+                      className="mb-20 font-[500] px-3 py-1 rounded-md bg-gradient-to-tl from-[#fcd34d] to-[#ef4444] hover:bg-gradient-to-tl hover:from-[#ef4444] hover:to-[#fcd34d] text-base text-white"
+                    >
+                      Add Course
+                    </button>
+                  </div>
+                </div>
+      </> : <><div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
         <table className="w-full text-sm text-left text-gray-500 ">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
             <tr>
@@ -367,7 +399,8 @@ export default function MyCourses() {
             </button>
           </Form.Item>
         </Form>
-      </Modal>
+      </Modal></>}
+      
     </div>
   );
 }
