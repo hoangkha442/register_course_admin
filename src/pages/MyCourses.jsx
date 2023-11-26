@@ -184,7 +184,7 @@ export default function MyCourses() {
     const myListCourses = courseList.filter((course) => { 
       return course?.nguoiTao?.taiKhoan.toLowerCase().includes(admin.taiKhoan)
     })
-    console.log('myListCourses: ', myListCourses);
+   
   return (
     <div className="">
       <div className="my-6">
