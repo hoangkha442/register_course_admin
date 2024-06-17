@@ -24,10 +24,12 @@ import { NavLink, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { userLocalStorage } from "../../services/LocalService";
+import { UserService } from "../../services/UserService";
 
 const Sidebar = () => {
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
   const [open, setOpen] = useState(isTabletMid ? false : true);
+  const [user, setUser] = useState()
   const sidebarRef = useRef();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -45,6 +47,12 @@ const Sidebar = () => {
   useEffect(() => {
     isTabletMid && setOpen(false);
   }, [pathname]);
+
+  useEffect(() => { 
+    UserService.getMyInfo().then((res) => { 
+      setUser(res.data)
+     }).catch((err) => {console.log(err);})  
+  }, [])
   const handleLogout = () => {
     Swal.fire({
       position: "center",
@@ -117,18 +125,18 @@ const Sidebar = () => {
         <div className="flex flex-col  h-full">
           <ul className="whitespace-pre px-2.5 text-[0.9rem] py-5 flex flex-col gap-1  font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100   md:h-[68%] h-[70%]">
             {open ? <small className="pl-3 text-slate-500 inline-block">
-              All Courses/ Users
+              Người dùng & Lớp học
             </small> : null}
             <li>
               <NavLink to={"/"} className="link">
                 <AiOutlineAppstore size={23} className="min-w-max" />
-                Courses
+                Lớp học
               </NavLink>
             </li>
             <li>
               <NavLink to={"/all-user"} className="link">
                 <BsPerson size={23} className="min-w-max" />
-                Users
+                Người dùng
               </NavLink>
             </li>
             
@@ -143,46 +151,46 @@ const Sidebar = () => {
             <li>
               <NavLink to={"/my-courses"} className="link">
                 <AppstoreAddOutlined className="min-w-max text-xl mr-1 " />
-                My Courses
+                  Lớp dạy
               </NavLink>
             </li>
             <li>
               <NavLink to={"/add-courses"} className="link">
                 <FolderAddOutlined className="min-w-max text-xl mr-1 " />
-                Add Courses
+                Thêm khóa học
               </NavLink>
             </li>
 
             <div className="border-t pt-2 border-slate-300 ">
             {open? 
               <small className="pl-3 text-slate-500 inline-block">
-                My Student
+                Danh sách chờ
               </small>
             : null}
 
             </div>
             <li>
-              <NavLink to={"/my-students"} className="link">
+              <NavLink to={"/approved"} className="link">
               <UsergroupDeleteOutlined  className="min-w-max text-xl mr-1 "/>
-                  My Students
+                  Được phê duyệt
               </NavLink>
             </li>
             <li>
               <NavLink to={"/approve"} className="link">
               <UnorderedListOutlined   className="min-w-max text-xl mr-1 "/>
-              Awaiting approval
+              Chờ phê duyệt
               </NavLink>
             </li>
             <div className="border-t pt-2 border-slate-300 ">
             {open? 
               <small className="pl-3 text-slate-500 inline-block">
-                Account
+                Tài khoản
               </small>
             : null} </div>
             <li>
               <NavLink to={"/settings"} className="link">
                 <SlSettings size={23} className="min-w-max" />
-                Settings
+                Cài đặt
               </NavLink>
             </li>
           </ul>
@@ -206,7 +214,7 @@ const Sidebar = () => {
                     >
                       <LogoutOutlined className="min-w-max text-xl mr-1 " />
 
-                      {admin?.hoTen}
+                      {user?.full_name}
                     </button>
                   </li>
                 </ul>

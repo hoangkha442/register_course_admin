@@ -5,10 +5,9 @@ import { storeAdmin,  } from "..";
 
 export const https = axios.create(
     {
-        baseURL: 'https://elearningnew.cybersoft.edu.vn',
+        baseURL: 'http://localhost:8080/',
         headers:{
-            tokenCybersoft: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCA0NCIsIkhldEhhblN0cmluZyI6IjI0LzA2LzIwMjQiLCJIZXRIYW5UaW1lIjoiMTcwMzM3NjAwMDAwMDAwIiwiaWF0IjoxNzAwOTY1MTI3fQ.RmqB24Zmi7WatJYLfKwAjCekXIAhyc34mOiKN08WEBE',
-            Authorization: "Bearer " + userLocalStorage.get()?.accessToken, 
+            Authorization: "Bearer " + userLocalStorage?.get()?.token, 
         }
     }   
 )

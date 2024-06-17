@@ -13,49 +13,27 @@ export const CoursesService = {
   getDetailCourses: (value) => {
     return https.get(`/api/QuanLyKhoaHoc/LayThongTinKhoaHoc?maKhoaHoc=${value}`);
   },
-  getCourseListPagination: (currentPage, sizePage, group) => {
+  getCourseListPagination: (currentPage, sizePage) => {
     return https.get(
-      `/api/QuanLyKhoaHoc/LayDanhSachKhoaHoc_PhanTrang?page=${currentPage}&pageSize=${sizePage}&MaNhom=${group}`
+      `/class/pagination?page=${currentPage}&pageSize=${sizePage}`
     );
   },
-  getCategory: () => { 
-    return https.get('/api/QuanLyKhoaHoc/LayDanhMucKhoaHoc')
-   }
-  ,  
-  getCourseOnCategory: (category, group) => { 
-    return https.get(`/api/QuanLyKhoaHoc/LayKhoaHocTheoDanhMuc?maDanhMuc=${category}&MaNhom=${group}`)
-   }
-  ,
-  postRegisterCourses: (data) => {
-    return https.post("/api/QuanLyKhoaHoc/DangKyKhoaHoc", data);
-  },
   postCourses: (data) => {
-    return https.post("/api/QuanLyKhoaHoc/ThemKhoaHoc", data);
-  },
-  postCoursesPicture: (data) => {
-    return https.post('/api/QuanLyKhoaHoc/ThemKhoaHocUploadHinh', data);
-  },
-  deleteCourse: (data) => {
-    return https.delete(`/api/QuanLyKhoaHoc/XoaKhoaHoc?MaKhoaHoc=${data}`);
-  },
-  putCourse: (data) => {
-    return https.put(`/api/QuanLyKhoaHoc/CapNhatKhoaHoc`, data);
-  },
-  getListStudent: (courseCode) => { 
-    return https.post(`/api/QuanLyNguoiDung/LayDanhSachHocVienKhoaHoc`, courseCode);
-  },
-  getListAwaitingApproval: (courseCode) => { 
-    return https.post(`/api/QuanLyNguoiDung/LayDanhSachHocVienChoXetDuyet`, courseCode);
-  },
-  postAcceptRegisterCourse: (data) => { 
-    return https.post(`/api/QuanLyKhoaHoc/GhiDanhKhoaHoc`, data);
-  },
-  postCancelRegisterCourse: (data) => { 
-    return https.post(`/api/QuanLyKhoaHoc/HuyGhiDanh`, data);
+    return https.post("/class", data);
   },
   postPictureCourses : (data) => { 
-    return https.post(`/api/QuanLyKhoaHoc/UploadHinhAnhKhoaHoc`, data)
-   }
-   
+   return https.post("/class", data)
+  },
+
+
+  // REGISTERCOURSE
+  getRegisterCourseByUserId: (userId) => {
+    return https.get(`/course-registration/user/${userId}`)
+  },
+
+  // QuanLyMonHoc
+  getSubject: () => {
+    return https.get(`/subject`)
+  }
 }
 

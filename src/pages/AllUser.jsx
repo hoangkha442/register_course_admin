@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { Modal, Pagination, Select, Form, Input, message } from "antd";
 import { EyeOutlined, StarFilled, DeleteOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
+import UserInfoTable from "../components/UserInforModal/UserInfoTable";
+import { CoursesService } from "../services/CoursesService";
+import CourseList from "../components/CourseList/CourseList";
 
 const { Option } = Select;
 const onFinishFailed = (errorInfo) => {
@@ -28,7 +31,8 @@ const AllUser = () => {
   // MODAL ANTD
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTailwind, setModalTailwind] = React.useState(false);
-  const [course, setCourse] = useState();
+  const [registerCourseByUserId, setRegisterCourseByUserId] = useState([]);
+  console.log('registerCourseByUserId: ', registerCourseByUserId);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -40,44 +44,55 @@ const AllUser = () => {
   };
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [group, setGroup] = useState("GP01");
+  const [group, setGroup] = useState("");
+  const [allUser, setAllUser] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sizeItem, setSizeItem] = useState(8);
-  const [allUser, setAllUser] = useState([]);
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState('');
   const [user, setUser] = useState();
-  const onChange = (pageNumber, pageSize) => {
+  const onChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    setSizeItem(pageSize);
   };
   // Call API ALl user
   useEffect(() => {
-    UserService.getUserListPagination(group, userName, currentPage, sizeItem)
-      .then((res) => {
+    UserService.getUserListPagination(currentPage, sizeItem, userName, group)
+      .then(res => {
         setAllUser(res.data);
       })
-      .catch((err) => {
-        console.log("err: ", err);
+      .catch(err => {
+        console.error("Error fetching user list:", err);
       });
-  }, [group, userName, currentPage, sizeItem]);
+  }, [currentPage, sizeItem, userName, group]);
+
+
+  const getRole = (role) => {
+    if(role === 'quanTriVien')return <p className="font-medium py-3 px-5 badge badge-accent">Quản trị viên</p>
+    else if(role === 'giaoVien'){
+      return <p className="badge badge-ghost font-medium py-3 px-5">Giáo viên</p>
+    }
+    else{
+      return <p className="badge badge-basic font-medium py-3 px-5">Học viên</p>
+    }
+  }
   const handleRenderUsers = () => {
-    return allUser?.items?.map((item, index) => {
+    return allUser?.data?.map((item, index) => {
       return (
         <tr key={index} className="bg-white border-b">
           <th
             scope="row"
             className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap "
           >
-            {item?.taiKhoan}
+            {item?.full_name}
           </th>
-          <td className="px-6 py-3">{item?.hoTen}</td>
           <td className="px-6 py-3">{item?.email}</td>
-          <td className="px-6 py-3">{item?.soDT}</td>
+          <td className="px-6 py-3">{item?.phone_number}</td>
+          <td className="px-6 py-3">{getRole(item?.role)}</td>
           <td className="px-6 py-3 text-center flex items-center space-x-3">
             <button
               onClick={() => {
                 showModal();
                 handleGetUser(item);
+                handleGetRegsterCourses(item?.user_id);
               }}
             >
               <EyeOutlined className="hover:text-red-500 transition-all duration-500 text-base" />
@@ -123,6 +138,12 @@ const AllUser = () => {
   const handleGetUser = (data) => {
     setUser(data);
   };
+  const handleGetRegsterCourses = (user_id) => {
+    CoursesService.getRegisterCourseByUserId(user_id).then((res) => { 
+      setRegisterCourseByUserId(res.data)
+    }).catch((err) => { console.log(err); })
+
+  }
   // setGroup
   const handleOnChangeSelect = (value) => {
     setGroup(value);
@@ -133,12 +154,12 @@ const AllUser = () => {
     setUserName(value);
   };
   const onFinish = (values) => {
-    UserService.postAddUser(values)
+    UserService.postUser(values)
     .then((res) => {
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Add User Success",
+        title: "Thêm người dùng thành công!",
         showConfirmButton: false,
         timer: 1500,
       });
@@ -152,41 +173,34 @@ const AllUser = () => {
       Swal.fire({
         position: "center",
         icon: "error",
-        title: `${err.response.data} please try again`,
+        title: `Thêm người dùng thất bại, vui lòng thử lại`,
         showConfirmButton: false,
         timer: 1500,
       });
     });
   };
+  const Style = {
+    inputStyle: "w-full px-4 py-2 text-gray-900 bg-white border rounded-md"
+  }
+
+  
   return (
     <div className="">
       <div className="flex items-center mt-10 space-x-5 justify-between">
         <div className="">
           <h1>
-            <span className="text-base font-[400]">Group</span> {group}
-          </h1>
-          <h1>
-            <span className="text-base font-[400]">Search keywords</span>{" "}
+            <span className="text-base font-[400]">Từ khóa tìm kiếm: </span>
             {userName}
           </h1>
         </div>
         <div className="w-[50%]">
           <div className="flex space-x-5">
-            <Select
-              defaultValue="GP01"
-              allowClear
-              className="w-[50%]"
-              onChange={handleOnChangeSelect}
-            >
-              <Option value="GP01">GP01</Option>
-              <Option value="GP02">GP02</Option>
-              <Option value="GP03">GP03</Option>
-              <Option value="GP04">GP04</Option>
-              <Option value="GP05">GP05</Option>
-              <Option value="GP06">GP06</Option>
-              <Option value="GP07">GP07</Option>
-              <Option value="GP08">GP08</Option>
-            </Select>
+          <Select defaultValue="Tất cả" onChange={handleOnChangeSelect} className="w-40">
+            <Option value="">Tất cả</Option>
+            <Option value="hocVien">Học viên</Option>
+            <Option value="giaoVien">Giáo viên</Option>
+            <Option value="quanTriVien">Quản trị viên</Option>
+          </Select>
             <form className="border-[#020d18] relative" id="searchCourses">
               <input
                 onChange={handleOnchange}
@@ -203,7 +217,7 @@ const AllUser = () => {
           onClick={() => setModalTailwind(true)}
           className="bg-gradient-to-tl from-[#fcd34d] to-[#ef4444] text-white text-sm hover:text-base transition-all duration-500 py-1 px-4 rounded-md"
         >
-          Add User
+          Thêm người dùng
         </button>
       </div>
       {modalTailwind ? (
@@ -214,7 +228,7 @@ const AllUser = () => {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">Add User</h3>
+                  <h3 className="text-3xl font-semibold">Thêm người dùng</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setModalTailwind(false)}
@@ -242,68 +256,68 @@ const AllUser = () => {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                   >
-                    {/* username */}
-                    <Form.Item
-                      label="UserName"
-                      className="mb-2"
-                      name="taiKhoan"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input your UserName!",
-                        },
-                        {
-                          pattern: regexName,
-                          message:
-                            "Must have at least one letter & limit of 20 words!",
-                        },
-                      ]}
-                    >
-                      <Input className="w-full px-4 py-2 text-gray-900 bg-white border rounded-md " />
-                    </Form.Item>
+
                     {/* FullName */}
                     <Form.Item
-                      label="FullName"
+                      label="Họ và tên"
                       className="mb-2"
-                      name="hoTen"
+                      name="full_name"
                       rules={[
                         {
                           required: true,
-                          message: "Please input FullName!",
+                          message: "Vui lòng nhập đầy đủ họ tên",
                         },
                         {
                           pattern: regexName,
                           message:
-                            "Must have at least one letter & limit of 20 words!",
+                            "Phải có ít nhất một chữ cái và giới hạn 20 từ",
                         },
                       ]}
                     >
-                      <Input className="w-full px-4 py-2 text-gray-900 bg-white border rounded-md " />
+                      <Input className={Style.inputStyle} />
+                    </Form.Item>
+                     {/* email  */}
+                     <Form.Item
+                      label="Email"
+                      className="mb-2"
+                      name="email"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập Email",
+                        },
+                        {
+                          pattern: regexEmail,
+                          message: "Email không đúng định dạng",
+                        },
+                      ]}
+                    >
+                      <Input className={Style.inputStyle} />
                     </Form.Item>
                     {/* Password  */}
                     <Form.Item
-                      label="Password"
+                      label="Mật Khẩu"
                       className="mb-2"
-                      name="matKhau"
+                      name="password"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your password!",
+                          message: "Vui lòng nhập mật khẩu",
                         },
                         {
                           pattern: regexPassword,
                           message:
-                            "Must contain at least one digit, both uppercase and lowercase letters, a special character, and must not exceed 20 characters",
+                            "Phải chứa ít nhất một chữ số, cả chữ hoa và chữ thường, ký tự đặc biệt và không vượt quá 20 ký tự",
                         },
                       ]}
                     >
-                      <Input.Password className="w-full px-4 py-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40" />
+                      <Input.Password className={Style.inputStyle} />
                     </Form.Item>
                     {/* PhoneNumber  */}
                     <Form.Item
-                      label="PhoneNumber"
+                      label="Số điện thoại"
                       className="mb-2"
-                      name="soDT"
+                      name="phone_number"
                       rules={[
                         {
                           required: true,
@@ -311,77 +325,35 @@ const AllUser = () => {
                         },
                         {
                           pattern: regexNumber,
-                          message: "Must be a number",
+                          message: "Số điện thoại không đúng định dạng",
                         },
                       ]}
                     >
-                      <Input className="w-full px-4 py-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40" />
+                      <Input className={Style.inputStyle} />
                     </Form.Item>
                     {/* Position  */}
                     <Form.Item
-                      label="Position"
+                      label="Vai trò"
                       className="mb-2"
-                      name="maLoaiNguoiDung" 
+                      name="role" 
                       rules={[
                         {
                           required: true,
-                          message: "Please input Position!",
+                          message: "vui lòng chọn vai trò",
                         },
                       ]}
                     >
                       <Select
-                        placeholder="Select a option and change input text above"
+                        placeholder="Chọn vai trò cho tài khoản"
                         allowClear
                       >
-                        <Option value="GV">GV</Option>
-                        <Option value="HV">HV</Option>
+                        <Option value="quanTriVien">Quản trị viên</Option>
+                        <Option value="giaoVien">Giáo viên</Option>
+                        <Option value="hocVien">Học viên</Option>
                       </Select>
                     </Form.Item>
-                    {/* email  */}
-                    <Form.Item
-                      label="Email address"
-                      className="mb-2"
-                      name="email"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input Email address!",
-                        },
-                        {
-                          pattern: regexEmail,
-                          message: "Email invalidate",
-                        },
-                      ]}
-                    >
-                      <Input className="w-full px-4 py-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40" />
-                    </Form.Item>
-                    {/* UserGroup  */}
-                    <Form.Item
-                      label="UserGroup"
-                      className="mb-2"
-                      name="maNhom"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input UserGroup!",
-                        },
-                      ]}
-                    >
-                      <Select
-                        placeholder="Select a option and change input text above"
-                        allowClear
-                      >
-                        <Option value="GP01">GP01</Option>
-                        <Option value="GP02">GP02</Option>
-                        <Option value="GP03">GP03</Option>
-                        <Option value="GP04">GP04</Option>
-                        <Option value="GP05">GP05</Option>
-                        <Option value="GP06">GP06</Option>
-                        <Option value="GP07">GP07</Option>
-                        <Option value="GP08">GP08</Option>
-                      </Select>
-                    </Form.Item>
-
+                   
+                   
                     {/* BUTTON */}
                     <Form.Item className="mt-6 w-full form-btn" id="form-btn">
                       <button
@@ -406,16 +378,17 @@ const AllUser = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Username
+                Họ tên
               </th>
-              <th scope="col" className="px-6 py-3">
-                FullName
-              </th>
+              
               <th scope="col" className="px-6 py-3">
                 Email
               </th>
               <th scope="col" className="px-6 py-3">
                 Phone Number
+              </th>
+              <th scope="col" className="px-6 py-3">
+                 Vai trò
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -428,25 +401,20 @@ const AllUser = () => {
           <Pagination
             defaultCurrent={1}
             current={currentPage}
-            total={allUser?.totalCount}
+            total={allUser?.totalPage * 10}
             onChange={onChange}
           />
         </div>
       </div>
       <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <div className="text-center my-2">
-          <p className="text-2xl font-bold uppercase">{user?.hoTen}</p>
-        </div>
-        <div className="col-span-12 sm:col-span-8 p-2 sm:p-6">
-          <p className="mt-1 text-[#666666] font-[300] ">
-            UserName: {user?.taiKhoan}
-          </p>
-          <p className="mt-1 text-[#666666] font-[300]">Email: {user?.email}</p>
-          <p className=" font-light mt-1 text-[#666666]">Phone: {user?.soDT}</p>
-          <p className="line-clamp-2 font-semibold md:leading-relaxed text-base text-[#666666]">
-            {user?.maLoaiNguoiDung} - {user?.tenLoaiNguoiDung}
-          </p>
-        </div>
+        <UserInfoTable user={user} />
+        {registerCourseByUserId.length == 0 ? (<div className="py-4">
+          <div className="text-center">
+            <p className="uppercase text-lg font-bold text-[#4d4d4d]">Các lớp đang học</p>
+          </div>
+          <p>Chưa có lớp học đăng ký!</p>
+            </div>
+        ): <CourseList registerCourseByUserId={registerCourseByUserId} />}
       </Modal>
     </div>
   );

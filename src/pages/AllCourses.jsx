@@ -1,304 +1,273 @@
+
+// import { useSelector, useDispatch } from "react-redux";
+// import { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { CoursesService } from "../services/CoursesService";
+// import { Modal, Pagination, Select } from "antd";
+// import { EyeOutlined } from "@ant-design/icons";
+// const { Option } = Select;
+
+// const AllCourses = () => {
+//   const admin = useSelector(state => state.adminSlice.adminInfo);
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [course, setCourse] = useState(null);
+//   const [category, setCategory] = useState("All");
+//   const [listCourses, setListCourses] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [sizeItem, setSizeItem] = useState(6);
+
+//   const showModal = () => setIsModalOpen(true);
+//   const hideModal = () => setIsModalOpen(false);
+//   const handleGetCourse = course => {
+//     showModal();
+//     setCourse(course);
+//   };
+//   const handleChangePage = (pageNumber) => {
+//     setCurrentPage(pageNumber);
+//   };
+
+//   useEffect(() => {
+//     if (!admin) navigate('/login');
+//   }, [admin, navigate]);
+
+//   useEffect(() => {
+//     CoursesService.getCourseListPagination(currentPage, sizeItem)
+//       .then(res => setListCourses(res.data))
+//       .catch(err => console.error(err));
+//   }, [currentPage, sizeItem]);
+
+//   useEffect(() => {
+//     CoursesService.getCourseOnCategory(category)
+//       .then(res => setListCourses(res.data))
+//       .catch(err => console.error(err));
+//   }, [category]);
+
+//   const renderCoursesList = () => listCourses?.data?.map((item, index) => (
+//     <tr key={index} className="bg-white border-b hover:bg-gray-100 transition-colors duration-300">
+//   <th scope="row" className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">
+//     {item.class_name}
+//   </th>
+//   <td className="px-6 py-4 text-gray-700">
+//     {item.users.full_name}
+//   </td>
+//   <td className="px-6 py-4 text-gray-700">
+//     {item.schedule}
+//   </td>
+//   <td className="px-6 py-4 text-gray-700">
+//     {item.registered_students}
+//   </td>
+//   <td className="px-6 py-4 text-gray-700">
+//     {item.price}
+//   </td>
+//   <td className="px-6 py-4 text-center">
+//     <button
+//       onClick={() => handleGetCourse(item)}
+//       className="p-2 rounded-md bg-gray-200 hover:bg-red-500 hover:text-white transition-all duration-300"
+//     >
+//       <EyeOutlined className="text-base"/>
+//     </button>
+//   </td>
+// </tr>
+
+//   ));
+
+//   return (
+//     <div>
+//       <div className="flex items-center justify-between mt-10">
+//         <div> <span className="text-sm font-normal">Filter: <span className="text-lg font-semibold">{category}</span></span></div>
+//         <div className="w-[50%] flex justify-end space-x-5">
+//           <Select defaultValue="All" className="w-[50%]" onChange={setCategory}>
+//             {["Toán", "Vật lý", "Hóa học", "Ngữ văn", "Anh văn", "Sinh học", "All"].map(cat => <Option key={cat} value={cat}>{cat}</Option>)}
+//           </Select>
+//         </div>
+//       </div>
+//       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+//         <table className="w-full text-sm text-left text-gray-500 ">
+//         <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+//             <tr>
+//               <th scope="col" className="px-6 py-3">
+//                 Tên lớp học
+//               </th>
+              
+//               <th scope="col" className="px-6 py-3">
+//                 Giáo viên
+//               </th>
+//               <th scope="col" className="px-6 py-3">
+//                 Lịch học
+//               </th>
+//               <th scope="col" className="px-6 py-3">
+//                  Số lượng học sinh
+//               </th>
+//               <th scope="col" className="px-6 py-3">
+//                 Học phí
+//               </th>
+//               <th scope="col" className="px-6 py-3">
+//               </th>
+//             </tr>
+//           </thead>
+//           <tbody>{renderCoursesList()}</tbody>
+//         </table>
+//         <Pagination current={currentPage} total={listCourses?.totalPage * 10} onChange={handleChangePage} className="my-4 text-center"/>
+//       </div>
+//       <Modal title={course?.tenKhoaHoc} open={isModalOpen} onOk={hideModal} onCancel={hideModal} centered>
+//         {/* <img src={course?.hinhAnh} alt={course?.tenKhoaHoc} className="w-full h-60 object-cover"/>
+//         <div className="p-4">
+//           <p>{course?.moTa}</p>
+//           <p className="text-right">{course?.nguoiTao.hoTen}</p>
+//         </div> */}
+//       </Modal>
+//     </div>
+//   );
+// };
+
+// export default AllCourses;
+
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CoursesService } from "../services/CoursesService";
-import { Modal, Pagination, Select, Space } from "antd";
-import { EyeOutlined, StarFilled } from "@ant-design/icons";
+import { Modal, Pagination, Select } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
 const { Option } = Select;
+
 const AllCourses = () => {
-  const admin = useSelector((state) => {
-    return state.adminSlice.adminInfo;
-  });
-  // MODAL ANTD 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [course, setCourse] = useState()
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const admin = useSelector((state) => state.adminSlice.adminInfo);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [category, setCategory] = useState("All");
-  const [listCategory, setListCategory] = useState([]);;
-  const [group, setGroup] = useState("GP01");
-  const [listCourses, setListCourses] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sizeItem, setSizeItem] = useState(8);
-  const onChange = (pageNumber, pageSize) => {
-    setCurrentPage(pageNumber);
-    setSizeItem(pageSize);
-  };
-  // Get Course when popup modal is opened
-  const handleGetCourse = (course) => { 
-    setCourse(course)
-   }
-  //  !admin navigate => login
-  useEffect(() => {
-    if(!admin){
-      navigate('/login')
-    }
-  }, []);
-  // Render CourseListPage
-  useEffect(() => {
-    CoursesService.getCourseListPagination(currentPage, sizeItem, group)
-      .then((res) => {
-        setListCourses(res.data);
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-      });
-  }, [currentPage, sizeItem, group]);
-  // get coursesList on category
-  useEffect(() => {
-    CoursesService.getCourseOnCategory(category, group)
-      .then((res) => {
-        setListCategory(res.data);
-      })
-      .catch((err) => {
-        // console.log('err: ', err);
-      });
-  }, [category, group]);
-  
-  const handleRenderCoursesList = () => {
-    return listCourses?.items?.map((item, index) => {
-      return (
-        <tr key={index} className="bg-white border-b">
-          <th
-            scope="row"
-            className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap "
-          >
-            {item.maKhoaHoc}
-          </th>
-          <td className="px-6 py-3">{item.tenKhoaHoc.length > 30 ? item.tenKhoaHoc.slice(0, 25) + ' ...' : item.tenKhoaHoc}</td>
-          <td className="px-6 py-3">
-            {item.danhMucKhoaHoc?.tenDanhMucKhoaHoc}
-          </td>
-          <td className="px-6 py-3">{item.nguoiTao?.hoTen}</td>
-          <td className="px-6 py-3 text-center">
-          <button onClick={() => { 
-            showModal()
-            handleGetCourse(item)
-           }}>
-              <EyeOutlined className="hover:text-red-500 transition-all duration-500 text-base"/>
-            </button>
-          </td>
-        </tr>
-      );
-    });
-  };
-  const handleRenderOncatagories = () => {
-    return listCategory?.slice(0, 7).map((item) => {
-      return (
-        <tr key={item.maKhoaHoc} className="bg-white border-b">
-          <th
-            scope="row"
-            className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap "
-          >
-            {item.maKhoaHoc}
-          </th>
-          <td className="px-6 py-3">{item.tenKhoaHoc}</td>
-          <td className="px-6 py-3">
-            {item.danhMucKhoaHoc?.tenDanhMucKhoaHoc}
-          </td>
-          <td className="px-6 py-3">{item.nguoiTao?.hoTen}</td>
-          <td className="px-6 py-3">
-          <button onClick={() => { 
-            showModal()
-            handleGetCourse(item)
-           }}>
-              <EyeOutlined className="hover:text-red-500 transition-all duration-500 text-base"/>
-            </button>
-          </td>
-        </tr>
-      );
-    });
-  };
-  const handleOnChangeSelect = (value) => {
-    setGroup(value);
-  };
-  const handleOnChangeCategory = (value) => {
-    setCategory(value);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [filters, setFilters] = useState({
+    category: "All",
+    currentPage: 1,
+    sizeItem: 6,
+  });
+  const [listCourses, setListCourses] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const showModal = () => setIsModalOpen(true);
+  const hideModal = () => setIsModalOpen(false);
+
+  const handleGetCourse = (course) => {
+    setSelectedCourse(course);
+    showModal();
   };
 
+  const handleChangePage = (pageNumber) => {
+    setFilters((prev) => ({ ...prev, currentPage: pageNumber }));
+  };
+
+  const handleCategoryChange = (value) => {
+    setFilters((prev) => ({ ...prev, category: value, currentPage: 1 }));
+  };
+
+  useEffect(() => {
+    if (!admin) {
+      navigate("/login");
+    }
+  }, [admin, navigate]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const { currentPage, sizeItem, category } = filters;
+        let response;
+
+        if (category === "All") {
+          response = await CoursesService.getCourseListPagination(currentPage, sizeItem);
+        } else {
+          response = await CoursesService.getCourseOnCategory(category);
+        }
+
+        setListCourses(response.data);
+        setTotalPages(response.totalPages || 1);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchCourses();
+  }, [filters]);
+
+  const renderCoursesList = () =>
+    listCourses?.data?.map((item, index) => (
+      <tr
+        key={index}
+        className="bg-white border-b hover:bg-gray-100 transition-colors duration-300"
+      >
+        <th scope="row" className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">
+          {item.class_name}
+        </th>
+        <td className="px-6 py-4 text-gray-700">{item.users.full_name}</td>
+        <td className="px-6 py-4 text-gray-700">{item.schedule}</td>
+        <td className="px-6 py-4 text-gray-700">{item.registered_students}</td>
+        <td className="px-6 py-4 text-gray-700">{item.price}</td>
+        <td className="px-6 py-4 text-center">
+          <button
+            onClick={() => handleGetCourse(item)}
+            className="p-2 rounded-md bg-gray-200 hover:bg-red-500 hover:text-white transition-all duration-300"
+          >
+            <EyeOutlined className="text-base" />
+          </button>
+        </td>
+      </tr>
+    ));
+
   return (
-    <div className="">
-      {category === "All" ? (
-        <>
-          <div className="flex items-center mt-10 space-x-5 justify-between">
-            <div className="">
-              <h1>
-                {category} <span className="text-base font-[400]">courses</span>
-              </h1>
-              <h1>
-                <span className="text-base font-[400]">Group</span> {group}{" "}
-              </h1>
-            </div>
-            <div className="w-[50%]">
-              <div className="flex space-x-5">
-                <Select
-                  defaultValue="GP01"
-                  allowClear
-                  className="w-[50%]"
-                  onChange={handleOnChangeSelect}
-                >
-                  <Option value="GP01">GP01</Option>
-                  <Option value="GP02">GP02</Option>
-                  <Option value="GP03">GP03</Option>
-                  <Option value="GP04">GP04</Option>
-                  <Option value="GP05">GP05</Option>
-                  <Option value="GP06">GP06</Option>
-                  <Option value="GP07">GP07</Option>
-                  <Option value="GP08">GP08</Option>
-                  <Option value="GP08">GP15</Option>
-                </Select>
-                <Select
-                  defaultValue="All"
-                  className="w-[50%]"
-                  onChange={handleOnChangeCategory}
-                >
-                  <Option value="BackEnd">BackEnd</Option>
-                  <Option value="Design">Design</Option>
-                  <Option value="DiDong">DiDong</Option>
-                  <Option value="FrontEnd">FrontEnd</Option>
-                  <Option value="FullStack">FullStack</Option>
-                  <Option value="TuDuy">TuDuy</Option>
-                  <Option value="All">All</Option>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-            <table className="w-full text-sm text-left text-gray-500 ">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Course code
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Courses
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Category
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Lecturers
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{handleRenderCoursesList()}</tbody>
-            </table>
-            <div className="my-4 text-center" id="pagination_courses">
-              <Pagination
-                defaultCurrent={1}
-                current={currentPage}
-                total={listCourses?.totalCount}
-                onChange={onChange}
-              />
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="flex items-center mt-10 space-x-5 justify-between">
-            <div className="">
-              <h1>
-                {category} <span className="text-base font-[400]">courses</span>
-              </h1>
-              <h1>
-                <span className="text-base font-[400]">Group</span> {group}
-              </h1>
-            </div>
-            <div className="w-[50%]">
-              <div className="flex space-x-5">
-                <Select
-                  defaultValue="GP01"
-                  allowClear
-                  className="w-[50%]"
-                  onChange={handleOnChangeSelect}
-                >
-                  <Option value="GP01">GP01</Option>
-                  <Option value="GP02">GP02</Option>
-                  <Option value="GP03">GP03</Option>
-                  <Option value="GP04">GP04</Option>
-                  <Option value="GP05">GP05</Option>
-                  <Option value="GP06">GP06</Option>
-                  <Option value="GP07">GP07</Option>
-                  <Option value="GP08">GP08</Option>
-                </Select>
-                <Select
-                  defaultValue="All"
-                  className="w-[50%]"
-                  onChange={handleOnChangeCategory}
-                >
-                  <Option value="BackEnd">BackEnd</Option>
-                  <Option value="Design">Design</Option>
-                  <Option value="DiDong">DiDong</Option>
-                  <Option value="FrontEnd">FrontEnd</Option>
-                  <Option value="FullStack">FullStack</Option>
-                  <Option value="TuDuy">TuDuy</Option>
-                  <Option value="All">All</Option>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-10">
-            <table className="w-full text-sm text-left text-gray-500 ">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Course code
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Courses
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Category
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Lecturers
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody> {handleRenderOncatagories()}</tbody>
-            </table>
-          </div>
-        </>
-      )}
-      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <div className="text-center my-2">
-        <p className="text-2xl font-bold uppercase">{course?.danhMucKhoaHoc?.tenDanhMucKhoaHoc}</p>
+    <div>
+      <div className="flex items-center justify-between mt-10">
+        <div>
+          <span className="text-sm font-normal">
+            Filter: <span className="text-lg font-semibold">{filters.category}</span>
+          </span>
         </div>
-        <div className="w-full h-60">
-          <img className="object-cover h-full w-full" src={course?.hinhAnh} alt={course?.danhMucKhoaHoc?.tenDanhMucKhoaHoc} />
+        <div className="w-[50%] flex justify-end space-x-5">
+          <Select defaultValue="All" className="w-[50%]" onChange={handleCategoryChange}>
+            {["Toán", "Vật lý", "Hóa học", "Ngữ văn", "Anh văn", "Sinh học", "All"].map((cat) => (
+              <Option key={cat} value={cat}>
+                {cat}
+              </Option>
+            ))}
+          </Select>
         </div>
-        <div className="col-span-12 sm:col-span-8 p-2 sm:p-6">
-            <p className='line-clamp-2 font-semibold md:leading-relaxed md:text-xl text-[#666666]'>{course?.tenKhoaHoc}</p>
-            <p className='mt-1 md:block hidden text-[#666666] font-[300]'>{course?.moTa.length > 80 ? course?.moTa.slice(0,70) + '...' : course?.moTa}</p>
-            <p className='md:font-semibold font-light mt-1 text-[#666666]'>{course?.nguoiTao.hoTen}</p>
-            <p className='sm:hidden line-clamp-2 font-semibold md:leading-relaxed md:text-xl text-[#666666] flex items-center'>5.0 </p>
-            <div className="flex items-center justify-between">
-              <div className="flex space-x-2 flex-wrap items-center text-sm pt-2 text-[#666666]">
-                <p>13 hours</p>
-                <p>·</p>
-                <p>32 lectures</p>
-              </div>
-              <div className="text-lg font-semibold text-[#666666]">
-                <p className="no-underline font-bold text-xl text-red-500">15,999,000<span class="text-sm ml-1">VNĐ</span></p>
-              </div>
-            </div>
-          </div>
+      </div>
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+        <table className="w-full text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3">Tên lớp học</th>
+              <th scope="col" className="px-6 py-3">Giáo viên</th>
+              <th scope="col" className="px-6 py-3">Lịch học</th>
+              <th scope="col" className="px-6 py-3">Số lượng học sinh</th>
+              <th scope="col" className="px-6 py-3">Học phí</th>
+              <th scope="col" className="px-6 py-3"></th>
+            </tr>
+          </thead>
+          <tbody>{renderCoursesList()}</tbody>
+        </table>
+        <Pagination
+          current={filters.currentPage}
+          total={totalPages * filters.sizeItem}
+          onChange={handleChangePage}
+          className="my-4 text-center"
+        />
+      </div>
+      <Modal
+        title={selectedCourse?.class_name}
+        open={isModalOpen}
+        onOk={hideModal}
+        onCancel={hideModal}
+        centered
+      >
+        <img
+          src={selectedCourse?.image}
+          alt={selectedCourse?.class_name}
+          className="w-full h-60 object-cover"
+        />
+        <div className="p-4">
+          <p>{selectedCourse?.description}</p>
+          <p className="text-right">{selectedCourse?.teacher_name}</p>
+        </div>
       </Modal>
     </div>
   );

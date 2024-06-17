@@ -13,6 +13,13 @@ const onFinishFailed = (errorInfo) => {
   message.error(errorInfo);
 };
 const Settings = () => {
+  const [form] = Form.useForm();
+  const [user, setUser] = useState({
+      full_name: '',
+      email: '',
+      password: '',
+      phone_number: '',
+  })
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const regexNumber = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$/;
@@ -28,44 +35,51 @@ const Settings = () => {
     if (!admin) {
       navigate("/login");
     }
+    UserService.getMyInfo().then((res) => { 
+      setUser(res.data)
+     }).catch((err) => {console.log(err);})
   }, []);
-  const onFinish = (values) => {
-    console.log('values: ', values);
-    const newValues = {...values, 'maLoaiNguoiDung': admin?.maLoaiNguoiDung, 'taiKhoan': admin?.taiKhoan}
-    console.log('newValues: ', newValues);
-    UserService.putUserInfor(newValues)
-    .then((res) => {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Update Account Success",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      setTimeout(() => {
-        navigate("/login");
-        userLocalStorage.remove();
-        window.location.reload();
-      }, 1000);
+  useEffect(() => form.resetFields(), [user, form])
 
-    })
-    .catch((err) => {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: `${err.response.data} please try again`,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    });
+  const onFinish = (values) => {
+    const newValues = {...user,...values}
+    console.log('newValues: ', newValues);
+    // UserService.putUserInfor(newValues)
+    // .then((res) => {
+    //   Swal.fire({
+    //     position: "center",
+    //     icon: "success",
+    //     title: "Update Account Success",
+    //     showConfirmButton: false,
+    //     timer: 1500,
+    //   });
+    //   setTimeout(() => {
+    //     navigate("/login");
+    //     userLocalStorage.remove();
+    //     window.location.reload();
+    //   }, 1000);
+
+    // })
+    // .catch((err) => {
+    //   Swal.fire({
+    //     position: "center",
+    //     icon: "error",
+    //     title: `${err.response.data} please try again`,
+    //     showConfirmButton: false,
+    //     timer: 1500,
+    //   });
+    // });
   };
+  const Style = {
+    buttonStyle: "w-full px-4 py-2 text-gray-900 bg-white border rounded-md"
+  }
   return <div>
   <div className="h-[90%] w-full">
     <div className="relative flex flex-col justify-cente overflow-hidden py-10">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-xl">
         <div className="flex items-center justify-center"></div>
         <h1 className="text-3xl mt-4 font-semibold text-center text-black">
-          Account Settings
+          Cập nhật tài khoản
         </h1>
         <Form
                     className="mt-6"
@@ -82,25 +96,18 @@ const Settings = () => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
+                    form={form}
+
                   >
-                    {/* username */}
-                    <Form.Item
-                      label="UserName"
-                      className="mb-2"
-                      name="taiKhoan"
-                      
-                    >
-                      <Input defaultValue={admin?.taiKhoan} disabled className="w-full px-4 py-2 text-gray-900 bg-white border rounded-md " />
-                    </Form.Item>
                     {/* FullName */}
                     <Form.Item
-                      label="FullName"
+                      label="Họ tên"
                       className="mb-2"
-                      name="hoTen"
+                      name="full_name"
                       rules={[
                         {
                           required: true,
-                          message: "Please input FullName!",
+                          message: "Tên không được bỏ trống!",
                         },
                         {
                           pattern: regexName,
@@ -109,17 +116,35 @@ const Settings = () => {
                         },
                       ]}
                     >
-                      <Input placeholder={admin?.hoTen} className="w-full px-4 py-2 text-gray-900 bg-white border rounded-md " />
+                      <Input defaultValue={user?.full_name} className={Style.buttonStyle} />
                     </Form.Item>
-                    {/* Password  */}
+                    {/* email  */}
                     <Form.Item
-                      label="Password"
+                      label="Email"
                       className="mb-2"
-                      name="matKhau"
+                      name="email"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your password!",
+                          message: "Email không được bỏ trống",
+                        },
+                        {
+                          pattern: regexEmail,
+                          message: "Email không hợp lệ",
+                        },
+                      ]}
+                    >
+                      <Input defaultValue={user?.email} className={Style.buttonStyle} />
+                    </Form.Item>
+                    {/* Password  */}
+                    <Form.Item
+                      label="Mật khẩu"
+                      className="mb-2"
+                      name="password"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Mật khẩu không được bỏ trống",
                         },
                         {
                           pattern: regexPassword,
@@ -128,17 +153,17 @@ const Settings = () => {
                         },
                       ]}
                     >
-                      <Input.Password placeholder='*********' className="w-full px-4 py-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40" />
+                      <Input.Password placeholder='*********' className={Style.buttonStyle} />
                     </Form.Item>
                     {/* PhoneNumber  */}
                     <Form.Item
-                      label="PhoneNumber"
+                      label="Số điện thoại"
                       className="mb-2"
-                      name="soDT"
+                      name="phone_number" 
                       rules={[
                         {
                           required: true,
-                          message: "Please input PhoneNumber!",
+                          message: "Số điện thoại không được bỏ trống",
                         },
                         {
                           pattern: regexNumber,
@@ -146,28 +171,11 @@ const Settings = () => {
                         },
                       ]}
                     >
-                      <Input placeholder={admin?.soDT} className="w-full px-4 py-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40" />
+                      <Input defaultValue={user?.phone_number} className={Style.buttonStyle} />
                     </Form.Item>
-                    {/* email  */}
-                    <Form.Item
-                      label="Email address"
-                      className="mb-2"
-                      name="email"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input Email address!",
-                        },
-                        {
-                          pattern: regexEmail,
-                          message: "Email invalidate",
-                        },
-                      ]}
-                    >
-                      <Input placeholder={admin?.email} className="w-full px-4 py-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40" />
-                    </Form.Item>
+                    
                     {/* UserGroup  */}
-                    <Form.Item
+                    {/* <Form.Item
                       label="UserGroup"
                       className="mb-2"
                       name="maNhom"
@@ -191,7 +199,7 @@ const Settings = () => {
                         <Option value="GP07">GP07</Option>
                         <Option value="GP08">GP08</Option>
                       </Select>
-                    </Form.Item>
+                    </Form.Item> */}
 
                     {/* BUTTON */}
                     <Form.Item className="mt-6 w-full form-btn" id="form-btn">

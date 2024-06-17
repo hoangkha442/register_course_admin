@@ -3,12 +3,14 @@ import RootLayout from "./layouts/RootLayout";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import AllUser from "./pages/AllUser";
-import AllCourses from "./pages/AllCourses";
+// import AllCourses from "./pages/AllCourses";
 import MyCourses from "./pages/MyCourses";
 import AddCourses from "./pages/AddCourses";
 import MyStudent from "./pages/MyStudent";
 import Approve from "./pages/Approve";
 import Spinner from "./components/Spinner/Spinner";
+import AllCourses from "./pages/Courses/AllCourses";
+import ApprovedStudentManagement from "./pages/ApprovedStudentManagement";
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
         <Route path="/add-courses" element={<AddCourses />} />
         <Route path="/my-students" element={<MyStudent />} />
         <Route path="/approve" element={<Approve />} />
+        <Route path="/approved" element={<ApprovedStudentManagement />} />
       </Routes>
     </RootLayout>
     </div>

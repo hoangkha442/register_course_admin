@@ -27,14 +27,14 @@ export default function Login() {
   const onFinish = (values) => {
     UserService.postLogin(values)
       .then((res) => {
-        if(res.data.maLoaiNguoiDung === 'GV'){
-              dispatch(setlogin(res.data));
+        if(res?.data?.role === 'quanTriVien'){
+              dispatch(setlogin(res?.data));
               // lưu xuống localStorages => giữ trạng thái đăng nhập sau khi load trang
-              userLocalStorage.set(res.data);
+              userLocalStorage.set(res?.data);
               Swal.fire({
                       position: "center",
                       icon: "success",
-                      title: "Login Successfully!",
+                      title: "Đăng nhập thành công!",
                       showConfirmButton: false,
                       timer: 1500,
               });
@@ -47,7 +47,7 @@ export default function Login() {
               Swal.fire({
                 position: "center",
                 icon: "error",
-                title: "You do not have access!",
+                title: "Vai trò người dùng không hợp lệ!",
                 showConfirmButton: false,
                 timer: 1500,
           });
@@ -58,7 +58,7 @@ export default function Login() {
         Swal.fire({
           position: "center",
           icon: "error",
-          title: err.response.data,
+          title: err.response.data.message,
           showConfirmButton: false,
           timer: 1500,
         });
@@ -80,7 +80,7 @@ export default function Login() {
                 </div>
               </div>
               <h1 className="text-3xl mt-4 font-semibold text-center text-black">
-                Login to COURSEPLUS
+                Đăng nhập vào CoursePlus
               </h1>
               <Form
                 className="mt-6"
@@ -102,9 +102,9 @@ export default function Login() {
                 autoComplete="off"
               >
                 <Form.Item
-                  label="Account"
+                  label="Email"
                   className="mb-2"
-                  name="taiKhoan"
+                  name="email"
                   rules={[
                     {
                       required: true,
@@ -115,9 +115,9 @@ export default function Login() {
                   <Input className="w-full px-4 py-2 text-gray-900 bg-white border rounded-md " />
                 </Form.Item>
                 <Form.Item
-                  label="Password"
+                  label="Mật Khẩu"
                   className="mb-2"
-                  name="matKhau"
+                  name="password"
                   rules={[
                     {
                       required: true,
@@ -130,39 +130,29 @@ export default function Login() {
 
                 <Form.Item>
                   <p className="text-[#000000c0] text-[12px] mt-2 font-[500] transition-all duration-500 hover:text-[#f77259]">
-                    Your continued use of this website means that you agree to
-                    our{" "}
-                    <span
+                  Việc bạn tiếp tục sử dụng trang web này có nghĩa là bạn đồng ý với các <span
                       onClick={() => {
                         message.error(
-                          "This feature has not been implemented yet!"
+                          "Tính năng chưa được phát triến!"
                         );
                       }}
                       className=" cursor-pointer underline"
                     >
-                      terms of use
-                    </span>
+                      điều khoản
+                    </span>  sử dụng của chúng tôi.
+                    
                     .
                   </p>
                 </Form.Item>
                 <Form.Item className="mt-3">
                   <button
                     type="submit"
-                    className="font-[500] w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-[#f64a6e] rounded-md hover:bg-[#f77259] focus:outline-none focus:bg-[#f77259]"
+                    className="uppercase font-[500] w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-[#f64a6e] rounded-md hover:bg-[#f77259] focus:outline-none focus:bg-[#f77259]"
                   >
-                    Log in
+                    Đăng nhập
                   </button>
                 </Form.Item>
               </Form>
-              <p className="mt-8 text-xs font-light text-center text-gray-700">
-                Don't have an account?
-                <NavLink
-                  to="/register"
-                  className="font-medium text-[#f64a6e] hover:underline ml-2"
-                >
-                  Sign up
-                </NavLink>
-              </p>
     </div>
     </div>
   )

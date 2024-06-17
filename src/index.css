@@ -57,3 +57,86 @@
   display: inline-block !important;
   width: 25% !important;
 }
+
+.badge-accent {
+  background: linear-gradient(to top left, #6ee7b7, #10b981) !important;
+}
+
+.badge-ghost {
+  background: linear-gradient(to top left, #c4b5fd, #3b82f6) !important;
+}
+.badge-basic{
+  background: linear-gradient(to top left, #f5f5dc, #d2b48c) !important;
+}
+
+.badge {
+  color: #f1f1f1 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 200ms;
+  height: 1.25rem/* 20px */;
+  font-size: 0.875rem/* 14px */;
+  line-height: 1.25rem/* 20px */;
+  width: fit-content;
+  padding-left: 0.563rem/* 9.008px */;
+  padding-right: 0.563rem/* 9.008px */;
+  border-radius: var(--rounded-badge, 1.9rem/* 30.4px */);
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: none !important;
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
+}
+:where(.menu li) .badge {
+  justify-self: end;
+}
+
+
+/* CourseModal.css */
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.modal-body {
+  width: 100%;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.modal-description {
+  margin-bottom: 16px;
+}
+
+.modal-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modal-info p {
+  margin: 0;
+}
